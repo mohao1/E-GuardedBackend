@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.HomeMapper">
+
+<!--    //创建家庭-->
+<!--    int CreateHome(@Param("Home") Home home);-->
+    <insert id="CreateHome" parameterType="Home">
+        insert into myap.home(home_id, home_name, user_num, `admin`)
+        VALUES (#{Home.homeId},#{Home.homeName},#{Home.userNum},#{Home.admin})
+    </insert>
+
+<!--    //删除家庭-->
+<!--    int DeleteHome(@Param("HomeId") String HomeId,@Param("adminId") String adminId);-->
+    <delete id="DeleteHome" >
+        delete from myap.home where admin=#{adminId} and home_id=#{HomeId};
+    </delete>
+
+<!--    //成员数量更新-->
+<!--    int UpdateNum(@Param("Num") int Num,@Param("HomeId") String HomeId);-->
+    <update id="UpdateNum" >
+        update myap.home set user_num=#{Num} where home_id=#{HomeId};
+    </update>
+
+<!--    //查询成员数量-->
+<!--    int SelectNum(@Param("HomeId") String HomeId);-->
+    <select id="SelectNum" resultType="int">
+        select user_num from myap.home where home_id=#{HomeId} for update;
+    </select>
+
+<!--    //查询家庭数据-->
+<!--    Home SelectHome(@Param("HomeId") String HomeId);-->
+
+    <select id="SelectHome" resultType="Home" >
+        select * from myap.home where home_id=#{HomeId};
+    </select>
+
+
+<!--    //清除所有长辈绑定某个家庭的人员的绑定-->
+<!--    void DeleteOldsterBindHome(@Param("HomeId") String HomeId,@Param("D") String d);-->
+
+    <update id="DeleteOldsterBindHome" >
+        update myap.oldster set home_id=#{D} where home_id =#{HomeId};
+    </update>
+
+<!--    //清除所有晚辈绑定某个家庭的人员的绑定-->
+<!--    void DeleteYoungerBindHome(@Param("HomeId") String HomeId,@Param("D") String d);-->
+    <update id="DeleteYoungerBindHome" >
+        update myap.younger set home_id=#{D}  where home_id=#{HomeId};
+    </update>
+
+<!--    //查询家庭列表-->
+<!--    List<Home> SelectHomeList();-->
+    <select id="SelectHomeList" resultType="Home">
+        select * from myap.home ;
+    </select>
+</mapper>

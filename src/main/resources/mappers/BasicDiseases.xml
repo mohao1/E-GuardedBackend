@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.BasicDiseasesMapper">
+<!--    //长辈添加长辈基础疾病-->
+<!--    int OldsterInsertBasicDisease(@Param("basicDiseases") Basic_Diseases basicDiseases);-->
+    <insert id="OldsterInsertBasicDisease" parameterType="Basic_Diseases" >
+        insert into myap.basic_diseases(disease_id, user_id, disease_description, disease_name)
+        VALUES (#{basicDiseases.diseaseId},#{basicDiseases.userId},
+                #{basicDiseases.diseaseDescription},#{basicDiseases.diseaseName});
+    </insert>
+
+<!--    //长辈删除长辈基础疾病-->
+<!--    int OldsterDeleteBasicDisease(@Param("UserId") String UserId,@Param("DiseaseId") String DiseaseId);-->
+    <delete id="OldsterDeleteBasicDisease" >
+        delete from myap.basic_diseases
+        where user_id=#{UserId} and disease_id=#{DiseaseId};
+    </delete>
+
+<!--    //长辈修改长辈基础疾病-->
+<!--    int OldsterUpdateBasicDisease(@Param("basicDiseases") Basic_Diseases basicDiseases);-->
+    <update id="OldsterUpdateBasicDisease" parameterType="Basic_Diseases">
+        update myap.basic_diseases
+        set disease_description=#{basicDiseases.diseaseDescription},
+            disease_name=#{basicDiseases.diseaseName}
+        where user_id=#{basicDiseases.userId} and disease_id=#{basicDiseases.diseaseId};
+    </update>
+
+<!--    //长辈查询长辈基础疾病-->
+<!--    List<Basic_Diseases> OldsterSelectBasicDisease(@Param("UserId") String UserId);-->
+    <select id="OldsterSelectBasicDisease" resultType="Basic_Diseases">
+        select * from myap.basic_diseases where user_id=#{UserId};
+    </select>
+
+
+<!--    //晚辈查询长辈基础疾病-->
+<!--    List<Basic_Diseases> YoungerSelectBasicDisease(@Param("UserId") String UserId,@Param("Oldster") String Oldster);-->
+    <select id="YoungerSelectBasicDisease" resultType="Basic_Diseases">
+        select * from myap.younger y
+        join myap.oldster o on o.home_id=y.home_id
+        join myap.basic_diseases b on b.user_id=o.user_id
+        where o.user_id=#{Oldster} and y.user_id=#{UserId};
+    </select>
+
+<!--    //根据疾病Id查询疾病-->
+<!--    Basic_Diseases SelectBasicDiseaseById(@Param("Oldster") String Oldster,@Param("DiseasesId") String DiseasesId);-->
+    <select id="SelectBasicDiseaseById" resultType="Basic_Diseases">
+        select * from myap.basic_diseases
+        where user_id=#{Oldster} and disease_id=#{DiseasesId};
+    </select>
+
+
+<!--    //根据个人ID和疾病的名称来查询疾病-->
+<!--    Basic_Diseases SelectBasicDiseaseByIdIsName(@Param("Oldster") String Oldster,@Param("DiseasesName") String DiseasesName);-->
+    <select id="SelectBasicDiseaseByIdIsName" resultType="Basic_Diseases">
+        select * from myap.basic_diseases
+        where user_id=#{Oldster} and disease_name=#{DiseasesName};
+    </select>
+</mapper>

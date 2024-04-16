@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.IntegralMapper">
+<!--    //添加积分列表-->
+<!--    int InsertIntegral(@Param("Integral") Integral integral);-->
+    <insert id="InsertIntegral" parameterType="Integral">
+        insert into myap.integral(home_id, fraction) VALUES (#{Integral.homeId},#{Integral.fraction});
+    </insert>
+<!--    //根据Id修改积分列表积分-->
+<!--    Integer UpdateIntegralById(@Param("Integral") Integral integral);-->
+    <update id="UpdateIntegralById" parameterType="Integral">
+        update myap.integral set fraction=#{Integral.fraction} where home_id=#{Integral.homeId};
+    </update>
+<!--    //查询家庭积分列表积分-->
+<!--    Integer SelectIntegralById(@Param("Id") String id);-->
+    <select id="SelectIntegralById" resultType="Integral">
+        select * from myap.integral where home_id=#{Id} for update;
+    </select>
+</mapper>

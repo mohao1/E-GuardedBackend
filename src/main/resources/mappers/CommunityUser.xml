@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.CommunityUserMapper">
+<!--    //添加一个用户信息-->
+<!--    int SetCommunityUser(@Param("CommunityUser") CommunityUser communityUser);-->
+    <insert id="SetCommunityUser" parameterType="CommunityUser">
+        insert into myap.communityuser(user_id, community_id, `name`, age, sex)
+        values (#{CommunityUser.userId},#{CommunityUser.communityId},
+                #{CommunityUser.name},#{CommunityUser.age},#{CommunityUser.sex});
+    </insert>
+
+<!--    //查询社区人员绑定老人-->
+<!--    ArrayList<Oldster> GetCommunityUserList(@Param("id") String id);-->
+    <select id="GetCommunityUserList" resultType="Oldster">
+        select * from myap.communityuser c
+        join myap.oldster o on o.community_id=c.community_id
+        where c.user_id=#{id};
+    </select>
+
+<!--    //查询社区信息-->
+<!--    Map<String,String> GetCommunity(@Param("id") String id);-->
+    <select id="GetCommunity" resultType="Map">
+        select c.community_id, c.`name`, c.address, c.oldster_num, c.user_num  from myap.communityuser u
+        join myap.community c on u.community_id = c.community_id
+        where user_id=#{id};
+    </select>
+
+<!--    //社区人员绑定社区或者退出社区（修改社区）-->
+<!--    int CommunityUserBindCommunity(@Param("CommunityId") String CommunityId,@Param("UserId") String UserId);-->
+    <update id="CommunityUserBindCommunity" >
+        update myap.communityuser set community_id=#{CommunityId} where user_id=#{UserId};
+    </update>
+<!--    //查询社区人员个人信息-->
+<!--    CommunityUser GetCommunityUser(@Param("id") String id);-->
+    <select id="GetCommunityUser" resultType="CommunityUser" >
+        select * from myap.communityuser where user_id=#{id};
+    </select>
+
+<!--    //修改社区人员个人信息-->
+<!--    int UpdateYounger(@Param("CommunityUser") CommunityUser communityUser);-->
+    <update id="UpdateYounger" parameterType="CommunityUser" >
+        update myap.communityuser set `name`=#{CommunityUser.name} , age=#{CommunityUser.age} , sex=#{CommunityUser.sex} where user_id=#{CommunityUser.userId};
+    </update>
+
+<!--    //查询社区人员列表-->
+<!--    List<CommunityUser> SelectCommunityUserList();-->
+    <select id="SelectCommunityUserList" resultType="CommunityUser">
+        select * from myap.communityuser ;
+    </select>
+
+
+</mapper>

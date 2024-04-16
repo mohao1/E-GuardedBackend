@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.HealthScoreMapper">
+<!--    //根据长辈获取评分信息-->
+<!--    HealthScore SelectHealthScoreById(@Param("OldsterId")String OldsterId);-->
+    <select id="SelectHealthScoreById" resultType="HealthScore">
+        select * from myap.health_score where oldster_id=#{OldsterId};
+    </select>
+
+<!--    //根据晚辈获取评分信息-->
+<!--    HealthScore SelectHealthScoreByYounger(@Param("OldsterId")String OldsterId,@Param("YoungerId")String YoungerId);-->
+    <select id="SelectHealthScoreByYounger" resultType="HealthScore">
+        select s.oldster_id,s.score,s.date from myap.younger y
+        join myap.oldster o on o.home_id=y.home_id
+        join myap.health_score s on o.user_id=s.oldster_id
+        where y.user_id=#{YoungerId} and o.user_id=#{OldsterId};
+    </select>
+<!--    //设置评分信息-->
+<!--    int InsertHealthScore(@Param("healthScore")HealthScore healthScore);-->
+    <insert id="InsertHealthScore" parameterType="HealthScore">
+        insert into myap.health_score(oldster_id, score, `date`)
+        VALUES (#{healthScore.oldsterId},#{healthScore.score},#{healthScore.date});
+    </insert>
+
+<!--    //修改评分信息-->
+<!--    int UpdateHealthScore(@Param("healthScore")HealthScore healthScore);-->
+    <update id="UpdateHealthScore" parameterType="HealthScore">
+        Update myap.health_score
+        set score=#{healthScore.score},date=#{healthScore.date}
+        where oldster_id=#{healthScore.oldsterId};
+    </update>
+</mapper>

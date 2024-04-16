@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.ManagementMapper">
+    <!--    //查询用户信息根据登录名称-->
+    <!--    Management GetManagement(@Param("name") String name);-->
+    <select id="GetManagement" resultType="Management">
+        select * from myap.management where management_name=#{name};
+    </select>
+
+    <!--    //根据id获取全部信息-->
+    <!--    Map<String,Object> GetManagementById(@Param("id") String id);-->
+    <select id="GetManagementById" resultType="Map">
+        select management_name,`name` from myap.management where id=#{id};
+    </select>
+</mapper>
+
+

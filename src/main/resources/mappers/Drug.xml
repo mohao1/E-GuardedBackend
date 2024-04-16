@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.DrugMapper">
+<!--    //设置药品提醒-->
+<!--    int InsertDrug(@Param("drug") Drug drug);-->
+    <insert id="InsertDrug" parameterType="drug">
+        insert into myap.drug(take_id, user_id, drug_id,
+                              title, content, set_time,
+                              drug_time, whether, select_time)
+        values (#{drug.takeId},#{drug.userId},#{drug.drugId},
+                #{drug.title},#{drug.content},#{drug.setTime},
+                #{drug.drugTime},#{drug.whether},#{drug.selectTime});
+    </insert>
+
+<!--    //长辈查询药品提醒-->
+<!--    List<Map<String,Object>> OldsterSelectDrug(@Param("oldsterId") String oldsterId);-->
+    <select id="OldsterSelectDrug" resultType="Map" >
+        select d.take_id, d.drug_id, d.title, d.content, d.set_time, d.drug_time, d.whether,
+               d.select_time,d2.user_id, d2.name, d2.num, d2.method
+        from myap.drug d
+        join myap.drugnum d2 on d.drug_id =d2.drug_id and d.user_id=d2.user_id
+        where d.user_id=#{oldsterId} and d.flag=0;
+    </select>
+
+<!--    //删除药品提醒-->
+<!--    int DeleteDrug(@Param("takeId") String takeId,@Param("oldsterId") String oldsterId);-->
+    <delete id="DeleteDrug" >
+        delete from myap.drug where take_id=#{takeId} and user_id=#{oldsterId};
+    </delete>
+
+
+<!--    //修改药品提醒-->
+<!--    int UpdateDrug(@Param("drug") Drug drug);-->
+    <update id="UpdateDrug" parameterType="drug">
+        update myap.drug
+        set title=#{drug.title} ,content=#{drug.content},
+            set_time=#{drug.setTime},drug_time=#{drug.drugTime} where drug_id=#{drug.drugId} and user_id=#{drug.userId} and take_id=#{drug.takeId}
+    </update>
+
+<!--    //晚辈查询药品提醒-->
+<!--    List<Map<String,Object>> YoungerSelectDrug(@Param("oldsterId") String oldsterId,@Param("youngerId") String youngerId);-->
+    <select id="YoungerSelectDrug" resultType="Map">
+        select
+            d.take_id, d.drug_id, d.title, d.content, d.set_time, d.drug_time, d.whether,
+            d.select_time,d2.user_id, d2.name, d2.num, d2.method
+        from myap.younger y
+        join myap.oldster o on y.home_id= o.home_id
+        join myap.drug d on o.user_id=d.user_id
+        join myap.drugnum d2 on d.drug_id=d2.drug_id and o.user_id= d2.user_id
+        where y.user_id=#{youngerId} and o.user_id=#{oldsterId};
+    </select>
+
+
+<!--    //长辈确认药品提醒完成-->
+<!--    int ConfirmDrugs(@Param("oldsterId") String oldsterId,@Param("takeId") String takeId);-->
+    <update id="ConfirmDrugs" >
+        update myap.drug set whether=1 where user_id=#{oldsterId} and take_id=#{takeId};
+    </update>
+
+<!--    //设置修改查询时间并且重置确认时间-->
+<!--    int SetSelectTime(@Param("oldsterId") String oldsterId,@Param("selectTime") String selectTime);-->
+    <update id="SetSelectTime" >
+        update myap.drug set whether=0,select_time=#{selectTime} where user_id=#{oldsterId};
+    </update>
+
+<!--    //查询查询时间-->
+<!--    String GetSelectTime(@Param("oldsterId") String oldsterId);-->
+    <select id="GetSelectTime" resultType="String">
+        select select_time from myap.drug where user_id=#{oldsterId};
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.ApprovalListMapper">
+<!--    //根据社区管理员来查询申请列表-->
+<!--    List<ApprovalList> AdminSelectApprovalList(@Param("AdminId")String AdminId);-->
+    <select id="AdminSelectApprovalList" resultType="ApprovalList">
+        select a.Community_user_id,a.Community_id from myap.communityadmin c
+        join myap.approval_list a on a.Community_id=c.community_id
+        where c.admin_id=#{AdminId};
+    </select>
+
+<!--    //根据社区Id和用户Id删除数据-->
+<!--    int DeleteByCommunityIdAndUserId(@Param("CommunityId")String CommunityId,@Param("UserId")String UserId);-->
+    <delete id="DeleteByCommunityIdAndUserId" >
+        delete from myap.approval_list where Community_id=#{CommunityId} and Community_user_id=#{UserId};
+    </delete>
+
+<!--    //添加申请数据-->
+<!--    int InsertApprovalList(@Param("ApprovalList") ApprovalList approvalList);-->
+    <insert id="InsertApprovalList" parameterType="ApprovalList">
+        insert into myap.approval_list(id,Community_user_id, Community_id)
+        VALUES (#{ApprovalList.id},#{ApprovalList.communityUserId},#{ApprovalList.communityId});
+    </insert>
+
+<!--    //根据用户Id查询申请情况信息-->
+<!--    ApprovalList SelectByUserIdAndCommunityId(@Param("UserId") String UserId,@Param("CommunityId")String CommunityId);-->
+    <select id="SelectByUserIdAndCommunityId" resultType="ApprovalList" >
+        select * from myap.approval_list where Community_user_id=#{UserId} and Community_id=#{CommunityId};
+    </select>
+</mapper>

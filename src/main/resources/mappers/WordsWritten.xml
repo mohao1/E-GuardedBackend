@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.WordsWrittenMapper">
+
+<!--    //写入消息-->
+<!--    int InsertWordsWritten(@Param("wordsWritten")WordsWritten wordsWritten);-->
+    <insert id="InsertWordsWritten" parameterType="WordsWritten">
+        insert into myap.words_written(words_id, sender, recipient, type, `read`, send_time, send_date, content)
+        VALUES (#{wordsWritten.wordsId},#{wordsWritten.sender},
+                #{wordsWritten.recipient},#{wordsWritten.type},
+                #{wordsWritten.read},#{wordsWritten.sendTime},
+                #{wordsWritten.sendDate},#{wordsWritten.content});
+    </insert>
+
+<!--    //根据读取者Id查询消息-->
+<!--    List<WordsWritten> SelectWordsWrittenById(@Param("recipientId")String recipient);-->
+    <select id="SelectWordsWrittenById" resultType="WordsWritten">
+        select * from myap.words_written where recipient=#{recipientId};
+    </select>
+
+<!--    //根据时间删除消息-->
+<!--    int DeleteWordsWrittenByDataTime(@Param("dateTime")String dataTime);-->
+    <delete id="DeleteWordsWrittenByDataTime" >
+        delete from myap.words_written where send_date=#{dateTime};
+    </delete>
+
+<!--    //设置消息已读-->
+<!--    int UpdateWordsWrittenReadById(@Param("wordsId")String wordsId,@Param("recipientId") String recipientId);-->
+    <update id="UpdateWordsWrittenReadById" >
+        update myap.words_written set `read`=1 where words_id=#{wordsId} and recipient=#{recipientId};
+    </update>
+
+<!--    //根据发送者来删除信息-->
+<!--    int DeleteWordsWrittenByDataSenderId(@Param("SenderId") String SenderId);-->
+    <delete id="DeleteWordsWrittenByDataSenderId" >
+        delete from myap.words_written where sender=#{SenderId};
+    </delete>
+
+</mapper>

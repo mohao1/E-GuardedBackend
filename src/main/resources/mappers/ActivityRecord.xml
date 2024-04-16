@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.ActivityRecordMapper">
+<!--    //设置活动记录-->
+<!--    int InsertActivityRecord(@Param("activityRecord") ActivityRecord activityRecord);-->
+    <insert id="InsertActivityRecord" parameterType="ActivityRecord">
+        Insert Into myap.activity_record(record_id, oldster_id, activity_name, activity_content, set_time, execution_time)
+        VALUES (#{activityRecord.recordId},#{activityRecord.oldsterId},
+                #{activityRecord.activityName},#{activityRecord.activityContent},
+                #{activityRecord.setTime},#{activityRecord.executionTime});
+    </insert>
+
+<!--    //删除活动记录（根据设置时间）-->
+<!--    int DeleteActivityRecord(@Param("Time") String Time);-->
+    <delete id="DeleteActivityRecord">
+        delete from myap.activity_record where set_time!=#{Time};
+    </delete>
+
+<!--    //查询活动记录（根据长辈id）-->
+<!--    List<ActivityRecord> SelectActivityRecordList(@Param("OldsterId")String OldsterId,@Param("YoungerId")String YoungerId);-->
+    <select id="SelectActivityRecordList" resultType="ActivityRecord" >
+        select a.record_id, a.oldster_id, a.activity_name, a.activity_content, a.set_time, a.execution_time from myap.younger y
+        join myap.oldster o on y.home_id=o.home_id
+        join myap.activity_record a on a.oldster_id=o.user_id
+        where y.user_id=#{YoungerId} and o.user_id=#{OldsterId};
+    </select>
+</mapper>

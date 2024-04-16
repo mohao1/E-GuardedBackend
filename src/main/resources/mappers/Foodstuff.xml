@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.FoodstuffMapper">
+<!--    //设置食品记录-->
+<!--    int InsertFoodstuff(@Param("foodstuff") Foodstuff foodstuff);-->
+    <insert id="InsertFoodstuff" parameterType="Foodstuff">
+        insert into myap.foodstuff(take_id, user_id, title, content, `name`, `start`, `end`)
+        VALUES (#{foodstuff.takeId},#{foodstuff.userId},
+                #{foodstuff.title},#{foodstuff.content},
+                #{foodstuff.name},#{foodstuff.start},
+                #{foodstuff.end});
+    </insert>
+
+<!--    //长辈查询食品记录-->
+<!--    List<Foodstuff> OldsterSelectFoodstuff(@Param("oldster") String oldster);-->
+    <select id="OldsterSelectFoodstuff" resultType="Foodstuff">
+        select take_id, user_id, title, content, `name`, `start`, `end` from myap.foodstuff
+        where user_id=#{oldster} and flag=0;
+    </select>
+
+<!--    //删除或者恢复食品记录（虚拟删除）-->
+<!--    int DeleteResumeFoodstuff(@Param("oldster") String oldster,@Param("takeId") String takeId,@param("flag")int flag);-->
+    <update id="DeleteResumeFoodstuff" >
+        update myap.foodstuff set flag=#{flag}
+        where user_id=#{oldster} and take_id=#{takeId};
+    </update>
+
+<!--    //修改食品记录-->
+<!--    int UpdateFoodstuff(@Param("foodstuff") Foodstuff foodstuff);-->
+    <update id="UpdateFoodstuff" parameterType="Foodstuff">
+        update myap.foodstuff
+        set title=#{foodstuff.title} , content=#{foodstuff.content},
+            `name`=#{foodstuff.name}, `start`=#{foodstuff.start},
+            `end`=#{foodstuff.end}
+        where take_id=#{foodstuff.takeId} and user_id=#{foodstuff.userId};
+    </update>
+
+<!--    //长辈查询回收站的记录-->
+<!--    List<Foodstuff> OldsterSelectRetrieveFoodstuff(@Param("oldster") String oldster);-->
+    <select id="OldsterSelectRetrieveFoodstuff" resultType="Foodstuff">
+        select * from myap.foodstuff where user_id=#{oldster} and flag=1;
+    </select>
+
+<!--    //清除回收站的记录（证实删除）-->
+<!--    int CleanFoodstuff(@Param("oldster") String oldster,@Param("takeId") String takeId);-->
+    <delete id="CleanFoodstuff" >
+        delete from myap.foodstuff where user_id=#{oldster} and take_id=#{takeId} and flag=1;
+    </delete>
+
+<!--    //清除回收站的所有数据-->
+<!--    int CleanAllFoodstuff(@Param("oldster") String oldster);-->
+    <delete id="CleanAllFoodstuff" >
+        delete from myap.foodstuff where user_id=#{oldster}  and flag=1;
+    </delete>
+
+<!--    //晚辈查询食品记录-->
+<!--    List<Foodstuff> YoungerSelectFoodstuff(@Param("oldster") String oldster,@Param("younger") String younger);-->
+    <select id="YoungerSelectFoodstuff" resultType="Foodstuff">
+        select f.take_id, f.user_id, f.title,
+               f.content, f.name, f.start, f.end
+        from myap.younger y
+        join myap.oldster o on o.home_id=y.home_id
+        join myap.foodstuff f on f.user_id=o.user_id
+        where y.user_id=#{younger} and o.user_id=#{oldster} and flag=0;
+    </select>
+
+<!--    //晚辈查询回收站的记录-->
+<!--    List<Foodstuff> YoungerSelectRetrieveFoodstuff(@Param("oldster") String oldster,@Param("younger") String younger);-->
+    <select id="YoungerSelectRetrieveFoodstuff" resultType="Foodstuff">
+        select f.take_id, f.user_id, f.title,
+               f.content, f.name, f.start, f.end
+        from myap.younger y
+                 join myap.oldster o on o.home_id=y.home_id
+                 join myap.foodstuff f on f.user_id=o.user_id
+        where y.user_id=#{younger} and o.user_id=#{oldster} and flag=1;
+    </select>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.YoungerMapper">
+
+<!--    Younger GetYounger(@Param("id") String id);-->
+    <select id="GetYounger" resultType="com.ling.ap.Pojo.Entity.Younger">
+        select * from myap.younger where user_id=#{id};
+    </select>
+<!--    int SetYounger(@Param("Younger") Younger younger);-->
+    <insert id="SetYounger" parameterType="Younger">
+        insert
+        into myap.younger(`user_id`, `home_id`, `name`, `age`, `sex`, `priority`)
+        values (#{Younger.userId},#{Younger.homeId},#{Younger.name},#{Younger.age},#{Younger.sex},#{Younger.priority})
+    </insert>
+
+<!--    ArrayList<Oldster> GetOldsterList(@Param("id") String id);-->
+    <select id="GetOldsterList" resultType="Oldster">
+        select o.sex,o.age,o.name,o.community_id,o.home_id,o.user_id
+        from myap.younger y
+        join myap.home h on y.home_id = h.home_id
+        join myap.oldster o on h.home_id = o.home_id
+        where y.user_id=#{id};
+    </select>
+
+<!--    Home GetHome(@Param("id") String id);-->
+    <select id="GetHome" resultType="Map" >
+        select h.home_id, h.home_name, h.user_num, y2.name ,y2.user_id  from myap.younger y
+        join myap.home h on y.home_id = h.home_id
+        join myap.younger y2 on y2.user_id = h.admin
+        where y.user_id = #{id};
+    </select>
+
+<!--    //晚辈绑定家庭或者退出家庭（修改家庭）-->
+<!--    int YoungerBindHome(@Param("HomeId") String homeId,@Param("UserId") String UserId,@Param("Priority") int Priority);-->
+    <update id="YoungerBindHome">
+        update myap.younger set home_id=#{HomeId},priority=#{Priority} where user_id=#{UserId};
+    </update>
+
+
+
+<!--    //查询晚辈是否绑定长辈-->
+<!--    String SelectYoungerBindOldster(@Param("youngerId")String youngerId,@Param("OldsterId") String OldsterId);-->
+    <select id="SelectYoungerBindOldster" resultType="String">
+        select o.user_id from myap.younger y
+        join myap.oldster o on o.home_id=y.home_id
+        where o.user_id=#{OldsterId} and y.user_id=#{youngerId};
+    </select>
+
+<!--    //修改晚辈个人信息-->
+<!--    int UpdateYounger(@Param("Younger") Younger younger);-->
+    <update id="UpdateYounger" parameterType="Younger">
+        update myap.younger set `name`=#{Younger.name} ,sex=#{Younger.sex} ,age=#{Younger.age} where user_id=#{Younger.userId};
+    </update>
+
+<!--    //查询晚辈列表-->
+<!--    List<Younger> SelectYoungerList();-->
+    <select id="SelectYoungerList" resultType="Younger">
+        select * from myap.younger ;
+    </select>
+
+<!--    //晚辈查询长辈Id列表-->
+<!--    List<String> SelectOldsterIdListByYounger(@Param("YoungerId")String youngerId);-->
+    <select id="SelectOldsterIdListByYounger" resultType="String">
+        select o.user_id from myap.younger y
+            join myap.oldster o on y.home_id=o.home_id where y.user_id=#{YoungerId};
+    </select>
+
+</mapper>

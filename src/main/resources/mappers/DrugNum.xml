@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.DrugNumMapper">
+
+<!--    //设置药品名称数量使用方法-->
+<!--    int InsertDrugNum(@Param("drugNum") DrugNum drugNum);-->
+    <insert id="InsertDrugNum" parameterType="DrugNum">
+        insert into myap.drugnum(user_id, drug_id, `name`, num, method)
+        VALUES (#{drugNum.userId},#{drugNum.drugId},#{drugNum.name},#{drugNum.num},#{drugNum.method})
+    </insert>
+
+<!--    //修改药品数量-->
+<!--    int UpdateDrugNum(@Param("drugNum")DrugNum drugNum);-->
+    <update id="UpdateDrugNum" parameterType="DrugNum" >
+        update myap.drugnum set num =#{drugNum.num} where drug_id=#{drugNum.drugId} and user_id=#{drugNum.userId};
+    </update>
+
+<!--    //删除药品数量名称-->
+<!--    int DeleteDrugNum(@Param("drugId")String drugId);-->
+    <delete id="DeleteDrugNum" >
+        delete from myap.drugnum where drug_id=#{drugId};
+    </delete>
+
+<!--    //查询药品数量-->
+<!--    int SelectDrugNum(@Param("drugId") String drugId);-->
+    <select id="SelectDrugNum" resultType="int" >
+        select num from myap.drugnum where drug_id=#{drugId} for update;
+    </select>
+
+
+<!--    //查询药品信息-->
+<!--    DrugNum SelectDrugNumById(@Param("drugId") String drugId);-->
+    <select id="SelectDrugNumById" resultType="DrugNum">
+        select *from myap.drugnum where drug_id=#{drugId};
+    </select>
+
+<!--    //根据用户Id和药品名称查询药品信息-->
+<!--    DrugNum SelectDrugNumByOldsterIdAndName(@Param("OldsterId") String OldsterId,@Param("Name") String Name);-->
+    <select id="SelectDrugNumByOldsterIdAndName" resultType="DrugNum">
+        select *from myap.drugnum where user_id=#{OldsterId} and name=#{Name};
+    </select>
+</mapper>

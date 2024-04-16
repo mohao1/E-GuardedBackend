@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.SosRecordMapper">
+<!--    //添加一条求救信息-->
+<!--    int insertRecord(@Param("SosRecord")SosRecord sosRecord);-->
+    <insert id="insertRecord" parameterType="SosRecord">
+        insert into myap.sos_record(id, oldster_id, set_time, sos_type) 
+        values (#{SosRecord.id},#{SosRecord.oldsterId},#{SosRecord.setTime},#{SosRecord.sosType});
+    </insert>
+
+<!--    //查询全部求救信息-->
+<!--    List<SosRecord> SelectRecordList();-->
+    <select id="SelectRecordList" resultType="SosRecord">
+        select * from myap.sos_record;
+    </select>
+
+<!--    //根据信息id查询信息-->
+<!--    SosRecord SelectRecordById(@Param("Id")String id);-->
+    <select id="SelectRecordById" resultType="SosRecord">
+        select * from myap.sos_record where id=#{Id};
+    </select>
+
+<!--    //根据长辈id查询信息-->
+<!--    List<SosRecord> SelectRecordListByOldsterId(@Param("UserId")String UserId);-->
+    <select id="SelectRecordListByOldsterId" resultType="SosRecord">
+        select * from myap.sos_record where oldster_id=#{UserId};
+    </select>
+
+<!--    //根据时间信息查询信息-->
+<!--    List<SosRecord> SelectRecordListByTime(@Param("Time")String Time);-->
+    <select id="SelectRecordListByTime" resultType="SosRecord">
+        select * from myap.sos_record where set_time=#{Time};
+    </select>
+</mapper>
+

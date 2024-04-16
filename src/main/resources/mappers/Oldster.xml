@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.OldsterMapper">
+
+<!--    //插入一个长辈信息-->
+<!--    int SetOldster(@Param("Oldster")Oldster oldster);-->
+    <insert id="SetOldster" parameterType="Oldster">
+        insert
+        into myap.oldster(`user_id`, `home_id`, `community_id`, `name`, `age`, `sex`)
+        values (#{Oldster.userId},#{Oldster.homeId},#{Oldster.communityId},#{Oldster.name},#{Oldster.age},#{Oldster.sex});
+    </insert>
+<!--    //查询长辈信息-->
+<!--    Oldster GetOldster(@Param("id")String id);-->
+    <select id="GetOldster" resultType="Oldster">
+        select * from myap.oldster where user_id=#{id};
+    </select>
+
+<!--    ArrayList<Emergency_Contact> GetEmergencyContactsList(@Param("id") String id);-->
+    <select id="GetEmergencyContactsList" resultType="com.ling.ap.Pojo.ToDo.Emergency_Contact">
+        select y.name,y.priority , u.phone from myap.oldster o
+        join myap.younger y on o.home_id=y.home_id
+        join myap.userlogin u on y.user_id=u.user_id
+        where o.user_id=#{id};
+    </select>
+
+<!--    //查询优先级为2的晚辈集合-->
+<!--    ArrayList<Emergency_Contact> GetMaxEmergencyContactsList(@Param("id") String id);-->
+    <select id="GetMaxEmergencyContactsList" resultType="com.ling.ap.Pojo.ToDo.Emergency_Contact">
+        select y.name , u.phone ,y.priority from myap.oldster o
+        join myap.younger y on o.home_id=y.home_id and y.priority=2
+        join myap.userlogin u on y.user_id=u.user_id
+        where o.user_id=#{id};
+    </select>
+
+<!--    //长辈绑定家庭或者退出家庭（修改家庭）-->
+<!--    int OldsterBindHome(@Param("HomeId") String homeId,@Param("UserId") String UserId);-->
+    <update id="OldsterBindHome">
+        update myap.oldster set home_id=#{HomeId} where user_id=#{UserId};
+    </update>
+
+<!--    //查询长辈家庭信息-->
+<!--    Map<String,String> GetHome(@Param("id") String id);-->
+    <select id="GetHome" resultType="Map">
+        select h.home_id, h.home_name, h.user_num, y2.name ,y2.user_id  from myap.oldster o
+        join myap.home h on o.home_id = h.home_id
+        join myap.younger y2 on y2.user_id = h.admin
+        where o.user_id = #{id};
+    </select>
+
+<!--    //查询前辈绑定晚辈-->
+<!--    ArrayList<Younger> GetYoungerList(@Param("id") String id);-->
+
+    <select id="GetYoungerList" resultType="Younger">
+        select y.user_id, y.sex,y.age,y.name,y.home_id
+        from myap.oldster o
+        join myap.younger y on y.home_id = o.home_id
+        where o.user_id=#{id};
+    </select>
+
+<!--    //获取晚辈列表-->
+<!--    List<String> SelectOldsterIdList();-->
+
+    <select id="SelectOldsterIdList" resultType="String">
+        select user_id from myap.oldster;
+    </select>
+
+<!--    //长辈绑定社区或者退出社区（修改社区）-->
+<!--    int OldsterBindCommunity(@Param("communityId") String communityId,@Param("UserId") String UserId);-->
+    <update id="OldsterBindCommunity">
+        update myap.oldster set community_id=#{communityId} where user_id=#{UserId};
+    </update>
+
+<!--    //长辈查询社区信息-->
+<!--    Community SelectCommunity(@Param("OldsterId") String OldsterId);-->
+    <select id="SelectCommunity" resultType="Community">
+        select c.community_id, c.`name`, c.address, c.oldster_num, c.`admin`, c.user_num from myap.oldster o
+        join myap.community c on c.community_id=o.community_id
+        where o.user_id=#{OldsterId};
+    </select>
+
+<!--    //查询长辈社区社区人员列表-->
+<!--    List<CommunityUser> SelectCommunityUserList(@Param("OldsterId") String OldsterId);-->
+    <select id="SelectCommunityUserList" resultType="CommunityUser">
+        select c.user_id, c.community_id, c.name, c.age, c.sex from myap.oldster o
+        join myap.communityuser c on c.community_id=o.community_id
+        where o.user_id=#{OldsterId};
+    </select>
+
+<!--    //查询长辈社区社区人员信息-->
+<!--    CommunityUser SelectCommunityUser(@Param("OldsterId") String OldsterId,@Param("CommunityUserId") String CommunityUserId);-->
+    <select id="SelectCommunityUser" resultType="CommunityUser">
+        select c.user_id, c.community_id, c.name, c.age, c.sex from myap.oldster o
+        join myap.communityuser c on c.community_id=o.community_id
+        where o.user_id=#{OldsterId} and c.user_id=#{CommunityUserId};
+    </select>
+
+<!--    //修改晚辈个人信息-->
+<!--    int UpdateOldster(@Param("Oldster")Oldster oldster);-->
+    <update id="UpdateOldster" parameterType="Oldster">
+        update myap.oldster set `name`=#{Oldster.name} , age=#{Oldster.age} , sex=#{Oldster.sex} where user_id=#{Oldster.userId};
+    </update>
+
+<!--    //查询长辈列表-->
+<!--    List<Oldster> SelectOldsterList();-->
+    <select id="SelectOldsterList" resultType="Oldster">
+        select * from myap.oldster;
+    </select>
+
+
+<!--    //长辈查询晚辈Id列表-->
+<!--    List<String> SelectYoungerIdListByOldster(@Param("OldsterId")String oldsterId);-->
+    <select id="SelectYoungerIdListByOldster" resultType="String">
+        select y.user_id from myap.oldster o
+            join myap.younger y on o.home_id=y.home_id where o.user_id=#{OldsterId};
+    </select>
+</mapper>

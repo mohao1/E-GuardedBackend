@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.CommunityMapper">
+<!--    //创建社区-->
+<!--    int CreateCommunity(@Param("community")Community community);-->
+    <insert id="CreateCommunity" parameterType="Community">
+        insert into myap.communityuser(user_id, community_id, `name`, age, sex)
+        VALUES (#{community.userId},#{community.communityId},#{community.name},#{community.age},#{community.sex});
+    </insert>
+<!--    //删除社区-->
+<!--    int DeleteCommunity(@Param("communityId")String community ,@Param("adminId")String adminId);-->
+    <delete id="DeleteCommunity" >
+        delete from myap.community
+        where community_id=#{communityId} and admin=#{adminId};
+    </delete>
+<!--    //修改社区长辈人数-->
+<!--    int UpdateCommunityOldster(@Param("Num") int Num,@Param("communityId")String community);-->
+    <update id="UpdateCommunityOldster">
+        update myap.community set oldster_num=#{Num} where community_id=#{communityId};
+    </update>
+
+<!--    //修改社区人员人数-->
+<!--    int UpdateCommunityYounger(@Param("Num") int Num,@Param("communityId")String community);-->
+    <update id="UpdateCommunityYounger">
+        update myap.community set user_num=#{Num} where community_id=#{communityId};
+    </update>
+
+<!--    //查询社区长辈人数-->
+<!--    int SelectCommunityOldsterNum(@Param("communityId")String community);-->
+    <select id="SelectCommunityOldsterNum"  resultType="int">
+        select oldster_num from myap.community where community_id=#{communityId} for update;
+    </select>
+
+<!--    //查询社区人员人数-->
+<!--    int SelectCommunityUserNum(@Param("communityId")String community);-->
+    <select id="SelectCommunityUserNum" resultType="int" >
+        select user_num from myap.community where community_id=#{communityId} for update;
+    </select>
+
+
+<!--    //查询社区信息-->
+<!--    Community SelectCommunity(@Param("communityId")String community);-->
+    <select id="SelectCommunity" resultType="Community">
+        select * from myap.community where community_id=#{communityId};
+    </select>
+
+<!--    //查询社区列表-->
+<!--    List<Community> SelectCommunityList();-->
+    <select id="SelectCommunityList" resultType="Community">
+        select * from myap.community;
+    </select>
+</mapper>

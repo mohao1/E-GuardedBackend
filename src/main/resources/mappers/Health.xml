@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.HealthMapper">
+
+<!--    //根据长辈ID查询老人健康全部健康信息-->
+<!--    List<Health> SelectHealthById(@Param("userId") String userId);-->
+    <select id="SelectHealthById" resultType="Health">
+        select * from myap.health where user_id=#{userId};
+    </select>
+
+
+<!--    //添加长辈健康信息-->
+<!--    int InsertHealth(@Param("health") Health health);-->
+    <insert id="InsertHealth" parameterType="health">
+        insert into myap.health(myap.health.health_Id, myap.health.user_id, myap.health.time, myap.health.step, myap.health.blood_low, myap.health.blood_pressure, myap.health.heart_rate, myap.health.blood_sugar, myap.health.sign)
+        VALUES (#{health.healthId},#{health.userId},#{health.time},#{health.step},#{health.bloodLow},#{health.bloodPressure},#{health.heartRate},#{health.bloodSugar},#{health.sign});
+    </insert>
+
+<!--    //根据时间删除长辈健康信息-->
+<!--    int DeleteHealthByTime(@Param("dateTime") Date dateTime);-->
+    <delete id="DeleteHealthByTime" parameterType="String">
+        delete from myap.health where time=#{dateTime};
+    </delete>
+
+<!--    //根据ID删除-->
+<!--    int DeleteHealthById(@Param("userId") String userId,@Param("TakeId") String TakeId);-->
+    <delete id="DeleteHealthById">
+        delete from myap.health where user_id=#{userId} and health_Id=#{TakeId};
+    </delete>
+
+<!--    //晚辈查询老人健康信息-->
+<!--    List<Health> SelectYoungerHealthById(@Param("userId") String userId,@Param("Oldster") String Oldster);-->
+    <select id="SelectYoungerHealthById" resultType="Health">
+        select h.health_Id, h.user_id,
+               h.time, h.step,
+               h.blood_low,h.blood_sugar,
+               h.blood_pressure,
+               h.heart_rate from myap.younger y
+        join myap.oldster o on o.home_id=y.home_id
+        join myap.health h on h.user_id= o.user_id
+        where y.user_id=#{userId} and o.user_id=#{Oldster};
+    </select>
+
+</mapper>

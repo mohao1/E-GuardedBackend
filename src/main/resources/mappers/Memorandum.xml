@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.MemorandumMapper">
+
+<!--    //长辈添加自己的备忘录(添加任务)-->
+<!--    int AddTask(@Param("Memorandum") Memorandum memorandum);-->
+    <insert id="AddTask" parameterType="Memorandum">
+        insert into myap.memorandum(take_id, user_id, title, content, set_time, `start`, `end`, whether)
+        VALUES (#{Memorandum.takeId},#{Memorandum.userId},
+                #{Memorandum.title},#{Memorandum.content},
+                #{Memorandum.setTime},#{Memorandum.start},
+                #{Memorandum.end},#{Memorandum.whether});
+    </insert>
+
+<!--    //长辈查询自己的备忘录(任务列表)-->
+<!--    List<Memorandum> SelectTaskList(@Param("UserId") String UserId);-->
+    <select id="SelectTaskList" resultType="Memorandum">
+        select * from myap.memorandum
+        where user_id=#{UserId} and flag=0;
+    </select>
+
+<!--    //删除任务(虚拟删除)-->
+<!--    int DeleteTask(@Param("TakeId") String TakeId,@Param("UserId") String UserId);-->
+    <update id="DeleteTask" parameterType="String">
+        update myap.memorandum set flag=1
+        where take_id=#{TakeId} and user_id=#{UserId};
+    </update>
+
+<!--    //恢复任务-->
+<!--    int RecoveryTask(@Param("TakeId") String TakeId,@Param("UserId") String UserId);-->
+    <update id="RecoveryTask" parameterType="String">
+        update myap.memorandum set flag=0
+        where take_id=#{TakeId} and user_id=#{UserId};
+    </update>
+
+<!--    //清空删除任务(证实删除)-->
+<!--    int ClearTask(@Param("TakeId") String TakeId,@Param("UserId") String UserId);-->
+    <delete id="ClearTask" parameterType="String">
+        delete from myap.memorandum
+        where user_id=#{UserId} and take_id=#{TakeId};
+    </delete>
+
+<!--    //查询已被删除任务列表-->
+<!--    List<Memorandum> SelectDeleteTaskList(@Param("UserId") String UserId);-->
+    <select id="SelectDeleteTaskList" parameterType="String" resultType="Memorandum">
+        select * from myap.memorandum
+        where user_id=#{UserId} and flag=1;
+    </select>
+
+<!--    //确认/取消确认完成任务-->
+<!--    int ConfirmTask(@Param("TakeId") String TakeId,@Param("UserId") String UserId,@Param("Whether")int Whether);-->
+    <update id="ConfirmTask">
+        update myap.memorandum set whether=#{Whether}
+        where take_id=#{TakeId} and user_id=#{UserId};
+    </update>
+
+<!--    //查询未完成的任务(列表)-->
+<!--    List<Memorandum> SelectUnfinishedTasksList(@Param("UserId") String UserId);-->
+    <select id="SelectUnfinishedTasksList" resultType="Memorandum">
+        select * from myap.memorandum where user_id=#{UserId} and whether=0 and flag=0;
+    </select>
+
+<!--    //修改任务内容-->
+<!--    int ModifyTask(@Param("Memorandum") Memorandum memorandum);-->
+    <update id="ModifyTask" parameterType="Memorandum">
+        update myap.memorandum
+        set title = #{Memorandum.title},content=#{Memorandum.content},
+            set_time=#{Memorandum.setTime},`start`=#{Memorandum.start},
+            `end`=#{Memorandum.end} where take_id=#{Memorandum.takeId} and user_id=#{Memorandum.userId};
+    </update>
+
+<!--    //查询已完成的任务(列表)-->
+<!--    List<Memorandum> SelectFinishedTasksList(@Param("UserId") String UserId);-->
+    <select id="SelectFinishedTasksList" parameterType="String" resultType="Memorandum">
+        select * from myap.memorandum where user_id=#{UserId} and whether=1 and flag=0;
+    </select>
+
+<!--    //使用对应TakeId还有长辈Id查询对应任务-->
+<!--    Memorandum SelectMemorandumById(@Param("UserId") String UserId,@Param("TakeId") String TakeId);-->
+    <select id="SelectMemorandumById" parameterType="String" resultType="Memorandum">
+        select * from myap.memorandum where user_id=#{UserId} and take_id=#{TakeId} for update;
+    </select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.CommunityAdminMapper">
+<!--    //查询自身信息-->
+<!--    CommunityAdmin SelectedCommunityAdminById(@Param("AdminId") String AdminId);-->
+    <select id="SelectedCommunityAdminById" resultType="CommunityAdmin">
+        select * from myap.communityadmin where admin_id=#{AdminId};
+    </select>
+
+
+<!--    //查询管理社区中的社区人员信息列表-->
+<!--    List<Oldster> SelectedOldsterList(@Param("AdminId") String AdminId);-->
+    <select id="SelectedOldsterList" resultType="Oldster">
+        select o.user_id, o.home_id, o.community_id, o.`name`, o.age, o.sex
+        from myap.communityadmin c
+        join myap.oldster o on o.community_id= c.community_id
+        where c.admin_id=#{AdminId};
+    </select>
+
+<!--    //查询管理社区中的老人信息列表-->
+<!--    List<CommunityUser> SelectedCommunityUserList(@Param("AdminId") String AdminId);-->
+    <select id="SelectedCommunityUserList" resultType="CommunityUser">
+        select u.user_id, u.community_id, u.`name`, u.age, u.sex from myap.communityadmin a
+        join myap.communityuser u on u.community_id=a.community_id
+        where a.admin_id=#{AdminId};
+    </select>
+<!--    //根据登录名称获取Id和密码-->
+<!--    Map<String,String> SelectedLogin(@Param("adminName") String adminName);-->
+    <select id="SelectedLogin" resultType="Map">
+        select admin_id,admin_password from myap.communityadmin where admin_name=#{adminName};
+    </select>
+
+<!--    //查询社区管理人员列表-->
+<!--    List<CommunityAdmin> SelectCommunityAdminList();-->
+    <select id="SelectCommunityAdminList" resultType="CommunityAdmin">
+        select * from myap.communityadmin;
+    </select>
+
+<!--    //查询社区信息-->
+<!--    Community SelectedCommunity(@Param("AdminId") String AdminId);-->
+    <select id="SelectedCommunity" resultType="Community">
+        select * from myap.community where admin=#{AdminId};
+    </select>
+
+
+</mapper>

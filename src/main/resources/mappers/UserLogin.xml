@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.UserLoginMapper">
+
+<!--    UserLogin PhoneGetUserLogin(@Param("Phone") String Phone);-->
+    <select id="PhoneGetUserLogin" resultType="UserLogin" parameterType="String">
+        select *from myap.userlogin where phone=#{Phone};
+    </select>
+<!--    int SetUserLogin(@Param("UserLogin") UserLogin userLogin);-->
+    <insert id="SetUserLogin" parameterType="UserLogin">
+        insert
+        into myap.userlogin(`user_id`, `password`, `phone`, `email`, `wechat`, `address`)
+        values (#{UserLogin.userId},#{UserLogin.password},#{UserLogin.phone},#{UserLogin.email},#{UserLogin.wechat},#{UserLogin.address});
+    </insert>
+
+
+
+<!--    Map<String,String> PhoneGetInformation(@Param("phone") String phone);-->
+    <select id="PhoneGetInformation" resultType="Map" >
+        select `user_id` , `password`
+        from myap.userlogin where phone=#{phone};
+    </select>
+
+
+<!--    String EmailGetInformation(@Param("email") String email);-->
+    <select id="EmailGetInformation" resultType="Map" >
+        select `user_id` , `password`
+        from myap.userlogin where email=#{email};
+    </select>
+
+<!--    根据id获取用户手机-->
+<!--    Map<String ,Object> GetPhoneById(@Param("id") String id);-->
+    <select id="GetPhoneById" resultType="Map">
+        select phone from myap.userlogin where user_id=#{id};
+    </select>
+</mapper>

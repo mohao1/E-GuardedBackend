@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.CounterFraudMapper">
+<!--    //添加反诈长辈-->
+<!--    int InsertCounterFraud(@Param("CounterFraud") CounterFraud counterFraud);-->
+    <insert id="InsertCounterFraud" parameterType="CounterFraud">
+        insert into myap.counter_fraud(user_id, name) VALUES (#{CounterFraud.userId},#{CounterFraud.name});
+    </insert>
+<!--    //删除反诈长辈-->
+<!--    int DeleteCounterFraud(@Param("Id") String id);-->
+    <delete id="DeleteCounterFraud">
+        delete from myap.counter_fraud where user_id=#{Id};
+    </delete>
+
+<!--    //查询全部长辈列表-->
+<!--    List<CounterFraud> SelectCounterFraudList();-->
+    <select id="SelectCounterFraudList" resultType="CounterFraud">
+        select * from myap.counter_fraud ;
+    </select>
+
+<!--    //查询某个长辈是否添加反诈-->
+<!--    CounterFraud SelectCounterFraudById(@Param("Id") String id);-->
+    <select id="SelectCounterFraudById" resultType="CounterFraud">
+        select * from myap.counter_fraud where user_id=#{Id};
+    </select>
+
+<!--    //根据长辈Id修改名称-->
+<!--    int UpdateCounterFraudNameById(@Param("CounterFraud") CounterFraud counterFraud);-->
+    <update id="UpdateCounterFraudNameById" parameterType="CounterFraud">
+        update myap.counter_fraud set name=#{CounterFraud.name} where user_id=#{CounterFraud.userId};
+    </update>
+</mapper>

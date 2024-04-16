@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ling.ap.Dao.CommunityManageMapper">
+<!--    //查询管理长辈信息列表-->
+<!--    List<Oldster> GetOldsterList(@Param("CommunityUserId") String CommunityUserId);-->
+    <select id="GetOldsterList" resultType="Oldster">
+        select o.user_id, o.home_id, o.community_id, o.name, o.age, o.sex from myap.communityuser u
+        join myap.oldster o on o.community_id=u.community_id
+        where u.user_id=#{CommunityUserId};
+    </select>
+
+<!--    //查询管理社区某个长辈身体状况十天-->
+<!--    List<Health> GetOldsterHealth(@Param("CommunityUserId") String CommunityUserId, @Param("OldsterId") String OldsterId);-->
+    <select id="GetOldsterHealth" resultType="Health">
+        select h.health_Id, h.user_id, h.`time`, h.step, h.blood_low, h.blood_pressure, h.heart_rate, h.blood_sugar, h.sign
+        from myap.communityuser u
+        join myap.oldster o on o.community_id=u.community_id
+        join myap.health h on h.user_id= o.user_id where u.user_id=#{CommunityUserId} and o.user_id=#{OldsterId};
+    </select>
+
+<!--    //查询管理社区某个长辈身体基础疾病列表-->
+<!--    List<Basic_Diseases> GetOldsterBasicDiseases(@Param("CommunityUserId") String CommunityUserId, @Param("OldsterId") String OldsterId);-->
+    <select id="GetOldsterBasicDiseases" resultType="Basic_Diseases" >
+        select b.disease_id, b.user_id, b.disease_description, b.disease_name from myap.communityuser u
+        join myap.oldster o on o.community_id=u.community_id
+        join myap.basic_diseases b on b.user_id=o.user_id
+        where u.user_id=#{CommunityUserId} and o.user_id=#{OldsterId};
+    </select>
+</mapper>
